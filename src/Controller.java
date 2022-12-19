@@ -19,13 +19,13 @@ public class Controller implements ActionListener {
 
     }
 
-    public AbstractAction newAction(String label, String description, String imagePath, int mnemonic) {
+    public AbstractAction newAction(String label, String description, ImageIcon icon, int mnemonic) {
 
-        AbstractAction action = new AbstractAction(label) {
+        AbstractAction action = new AbstractAction(label, icon) {
             {
                 putValue(AbstractAction.MNEMONIC_KEY, mnemonic);
                 putValue(AbstractAction.SHORT_DESCRIPTION, description);
-                putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(imagePath));
+                // putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(iconPath));
             }
         
             public void actionPerformed(ActionEvent e) {
@@ -35,15 +35,7 @@ public class Controller implements ActionListener {
         
                 switch (command) {
         
-                    case App.CMD_Move:
-                    case App.CMD_Open:
-                    case App.CMD_Close:
-                    case App.CMD_Rename:
-                    case App.CMD_Edit:
-                    case App.CMD_Cut:
-                    case App.CMD_Copy:
-                    case App.CMD_Paste:
-                    case App.CMD_Delete:
+                    case App.CMD_Gehitu:
         
                         JMenuItem menuItem = (JMenuItem) e.getSource();
                         String message = menuItem.getText();
@@ -52,11 +44,11 @@ public class Controller implements ActionListener {
         
                     break;
         
-                    case App.CMD_Salir:
+                    // case App.CMD_Salir:
         
-                        Controller.this.app.dispose();
+                    //     Controller.this.app.dispose();
         
-                    break;
+                    // break;
         
                     default:
                         break;
