@@ -2,6 +2,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
@@ -19,12 +20,13 @@ public class Controller implements ActionListener {
 
     }
 
-    public AbstractAction newAction(String label, String description, ImageIcon icon, int mnemonic) {
+    public AbstractAction newAction(String label, Icon icon, String command, int mnemonic) {
 
         AbstractAction action = new AbstractAction(label, icon) {
             {
                 putValue(AbstractAction.MNEMONIC_KEY, mnemonic);
-                putValue(AbstractAction.SHORT_DESCRIPTION, description);
+                // putValue(AbstractAction.SHORT_DESCRIPTION, description);
+                putValue(AbstractAction.ACTION_COMMAND_KEY, command);
                 // putValue(AbstractAction.LARGE_ICON_KEY, new ImageIcon(iconPath));
             }
         
@@ -32,14 +34,16 @@ public class Controller implements ActionListener {
 
                 String command = e.getActionCommand();
                 // JButton button = (JButton) e.getSource();
+
+                System.out.println(command);
         
                 switch (command) {
         
                     case App.CMD_Gehitu:
         
-                        JMenuItem menuItem = (JMenuItem) e.getSource();
-                        String message = menuItem.getText();
-                        JOptionPane.showMessageDialog (Controller.this.app, message, "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                        // JMenuItem menuItem = (JMenuItem) e.getSource();
+                        // String message = menuItem.getText();
+                        // JOptionPane.showMessageDialog (Controller.this.app, message, "Mensaje", JOptionPane.INFORMATION_MESSAGE);
         
         
                     break;

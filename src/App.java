@@ -34,7 +34,7 @@ import javax.swing.border.EmptyBorder;
 public class App extends JFrame implements PropertyChangeListener{
 
     final int WINDOW_WIDTH = 1000;
-	final int WINDOW_HEIGHT = 600;
+	final int WINDOW_HEIGHT = 628;
 
     final ImageIcon logo_img = new ImageIcon("../lib/images/logo.png");
     
@@ -65,6 +65,10 @@ public class App extends JFrame implements PropertyChangeListener{
 
     JButton btnGehitu, btnEditatu, btnEzabatu;
 
+    JLabel label;
+
+    Container appPane;
+
     public App(){
 
         super("BiltegIA");
@@ -78,7 +82,9 @@ public class App extends JFrame implements PropertyChangeListener{
 
         this.crearAcciones();
 
-        this.setContentPane(createAppPane());
+        appPane = createAppPane();
+
+        this.setContentPane(appPane);
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT); // or this.pack() for a dynamic window size
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,15 +105,17 @@ public class App extends JFrame implements PropertyChangeListener{
     private void crearAcciones() {
 
 		// accOpen = controller.newAction("Open", "Open", "../lib/icons/window_new.png", KeyEvent.VK_O);
-        accGehitu = controller.newAction("Produktua Gehitu", "", plus_icon, KeyEvent.VK_G);
-        accEditatu = controller.newAction("Produktua Editatu", "", edit_icon, KeyEvent.VK_E);
-        accEzabatu = controller.newAction("Produktua Ezabatu", "", remove_icon, KeyEvent.VK_R);
+        accGehitu = controller.newAction("Produktua Gehitu", plus_icon, CMD_Gehitu, KeyEvent.VK_G);
+        accEditatu = controller.newAction("Produktua Editatu", edit_icon, CMD_Editatu, KeyEvent.VK_E);
+        accEzabatu = controller.newAction("Produktua Ezabatu", remove_icon, CMD_Ezabatu, KeyEvent.VK_R);
 
 	}
 
     private Container createAppPane() {
 
 		JSplitPane main = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true);
+        main.setEnabled(false);
+        main.setDividerSize(0);
         main.setBorder(null);
 
         JPanel controlPanel = createControlPanel();
@@ -124,9 +132,14 @@ public class App extends JFrame implements PropertyChangeListener{
 
         int MAPA_WIDTH = 684, MAPA_HEIGHT = 584;
 
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+        // panel.setBorder(null);
         ImageIcon mapa = new ImageIcon("../lib/images/mapa/Almacen - Principal.png");
         
-        JPanel panel = new JPanel(){
+        label = new JLabel(){
 
             @Override
             protected void paintComponent(Graphics g){
@@ -137,10 +150,12 @@ public class App extends JFrame implements PropertyChangeListener{
             }
 
         };
-        panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        panel.setPreferredSize(new Dimension(MAPA_WIDTH, MAPA_HEIGHT));
+        label.setPreferredSize(new Dimension(MAPA_WIDTH, MAPA_HEIGHT));
+
+        panel.add(label);
 
         return panel;
+
     }
 
     private JPanel createControlPanel() {
@@ -215,10 +230,10 @@ public class App extends JFrame implements PropertyChangeListener{
 
     private JButton crearButton(AbstractAction action, ImageIcon icon){
 
-        JButton button = new JButton("Button");
+        JButton button = new JButton(action);
 
         button.setIcon(icon);
-        button.setIconTextGap(8);
+        // button.setIconTextGap(8);
 
         return button;
 
@@ -261,9 +276,18 @@ public class App extends JFrame implements PropertyChangeListener{
         
     }
 
+    private void foo(){
+
+        System.out.println(appPane.getSize());
+        System.out.println(btnGehitu.getIcon());
+
+    }
+
     public static void main(String[] args) throws Exception {
 
         App app = new App();
+
+        app.foo();
 
     }
 
