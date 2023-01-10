@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -29,12 +30,24 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 public class App extends JFrame implements PropertyChangeListener{
 
     final int WINDOW_WIDTH = 1000;
 	final int WINDOW_HEIGHT = 628;
+
+    final static CFont FONT_R = new CFont("../lib/fonts/Inter/static/Inter-Regular.ttf");
+    final static CFont FONT_M = new CFont("../lib/fonts/Inter/static/Inter-Medium.ttf");
+
+	final static Font FONT_R14 = FONT_R.resize(14f);
+	// final static Font FONT_R16 = FONT_R.resize(16f);
+	// final static Font FONT_R18 = FONT_R.resize(18f);
+
+	final static Font FONT_M14 = FONT_M.resize(14f);
+	final static Font FONT_M16 = FONT_M.resize(16f);
+	final static Font FONT_M32 = FONT_M.resize(32f);
 
     final ImageIcon logo_img = new ImageIcon("../lib/images/logo.png");
     
@@ -47,12 +60,13 @@ public class App extends JFrame implements PropertyChangeListener{
 	final static String PROPERTY_2 = "property2";
 	final static String PROPERTY_3 = "property3";
 
-    final static String COMMAND_1 = "command1";
-	final static String COMMAND_2 = "command2";
-
     final static String CMD_Gehitu = "gehitu";
     final static String CMD_Editatu = "editatu";
     final static String CMD_Ezabatu = "ezabatu";
+    final static String CMD_Edariak = "edariak";
+    final static String CMD_Patatak = "patatak";
+    
+    Container appPane;
 
     Model model;
     Controller controller;
@@ -60,14 +74,9 @@ public class App extends JFrame implements PropertyChangeListener{
     JList<String> menu;
     DefaultListModel<String> jlistMenuModel;
     RendererMenuOption jlistMenuRenderer;
-
-    AbstractAction accOpen, accGehitu, accEditatu, accEzabatu;
-
+    
     JButton btnGehitu, btnEditatu, btnEzabatu;
-
-    JLabel label;
-
-    Container appPane;
+    AbstractAction accOpen, accGehitu, accEditatu, accEzabatu;
 
     public App(){
 
@@ -77,8 +86,9 @@ public class App extends JFrame implements PropertyChangeListener{
 		jlistMenuModel = new DefaultListModel<String>();
         initList();
 
+        this.menu = new JList<>();
         this.model = new Model();
-        this.controller = new Controller(this, model);
+        this.controller = new Controller(this, model, menu);
 
         this.crearAcciones();
 
@@ -139,7 +149,7 @@ public class App extends JFrame implements PropertyChangeListener{
         // panel.setBorder(null);
         ImageIcon mapa = new ImageIcon("../lib/images/mapa/Almacen - Principal.png");
         
-        label = new JLabel(){
+        JLabel label = new JLabel(){
 
             @Override
             protected void paintComponent(Graphics g){
@@ -181,11 +191,11 @@ public class App extends JFrame implements PropertyChangeListener{
 		JScrollPane pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pane.setBorder(null);
 
-		menu = new JList<>();
         menu.setBackground(Palette.CPANEL_BG);
 		menu.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		menu.setModel(jlistMenuModel);
 		menu.setCellRenderer(jlistMenuRenderer);
+        menu.addListSelectionListener(controller);
 		// zerrenda.addListSelectionListener(kontrolatzailea);
 		
 		pane.setViewportView(menu);
@@ -197,43 +207,31 @@ public class App extends JFrame implements PropertyChangeListener{
 
     private JPanel crearPanelButtons() {
 
-        JPanel panel = new JPanel(new GridLayout(3, 1));
-        // panel.setOpaque(true);
-        // panel.setBackground(Color.red);
-        // panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel panel = new JPanel(new GridLayout(3, 1, 0, 8));
 
-        btnGehitu = crearButton(accGehitu, plus_icon);
-        btnEditatu = crearButton(accEditatu, edit_icon);
-        btnEzabatu = crearButton(accEzabatu, remove_icon);
+        btnGehitu = crearButton(accGehitu, Palette.BTN_PRIMARY_BG, Palette.BTN_PRIMARY_FG);
+        btnEditatu = crearButton(accEditatu, Palette.BTN_SECONDARY_BG, Palette.BTN_SECONDARY_FG);
+        btnEzabatu = crearButton(accEzabatu, Palette.BTN_SECONDARY_BG, Palette.BTN_SECONDARY_FG);
 
         panel.add(btnGehitu);
         panel.add(btnEditatu);
         panel.add(btnEzabatu);
-        
-
-        // JPanel panelGehitu = crearButtonPanel(btnGehitu);
-        // panelGehitu.setOpaque(true);
-        // panelGehitu.setBackground(Color.red);
-        // JPanel panelEditatu = crearButtonPanel(btnEditatu);
-        // panelEditatu.setOpaque(true);
-        // panelEditatu.setBackground(Color.green);
-        // JPanel panelEzabatu = crearButtonPanel(btnEzabatu);
-        // panelEzabatu.setOpaque(true);
-        // panelEzabatu.setBackground(Color.blue);
-
-        // panel.add(panelGehitu);
-        // panel.add(panelEditatu);
-        // panel.add(panelEzabatu);
 
         return panel;
     }
 
-    private JButton crearButton(AbstractAction action, ImageIcon icon){
+    private JButton crearButton(AbstractAction action, Color bg, Color fg){
 
         JButton button = new JButton(action);
 
-        button.setIcon(icon);
-        // button.setIconTextGap(8);
+        // button.setIcon(icon);
+        button.setOpaque(true);
+        button.setMargin(new Insets(4, 4, 4, 4));
+        // button.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        button.setFont(FONT_M14);
+        button.setForeground(fg);
+        button.setBackground(bg);
+        button.setIconTextGap(8);
 
         return button;
 
@@ -284,6 +282,13 @@ public class App extends JFrame implements PropertyChangeListener{
     }
 
     public static void main(String[] args) throws Exception {
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         App app = new App();
 

@@ -1,22 +1,28 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, ListSelectionListener {
 
     App app;
     Model model;
+    JList<String> menu;
 
-    public Controller(App app, Model model){
+    public Controller(App app, Model model, JList<String> menu){
 
         this.app = app;
         this.model = model;
+        this.menu = menu;
 
     }
 
@@ -73,17 +79,17 @@ public class Controller implements ActionListener {
 
 		switch (command) {
 
-			case App.COMMAND_1:
+			// case App.COMMAND_1:
 
-                model.fun1();
+            //     model.fun1();
 
-			break;
+			// break;
 
-			case App.COMMAND_2:
+			// case App.COMMAND_2:
 
-                model.fun2();
+            //     model.fun2();
 
-			break;
+			// break;
 
 			default:
 				break;
@@ -91,5 +97,16 @@ public class Controller implements ActionListener {
 		}
         
     }
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+
+		if ( e.getValueIsAdjusting()) return;
+		
+		String selected = menu.getSelectedValue();
+
+        System.out.println(selected);
+		
+	}
     
 }
