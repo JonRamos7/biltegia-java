@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -29,32 +31,47 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
+import javax.swing.border.*;
 import javax.swing.border.EmptyBorder;
 
 public class App extends JFrame implements PropertyChangeListener{
 
-    final int WINDOW_WIDTH = 1000;
-	final int WINDOW_HEIGHT = 628;
+    final int WINDOW_WIDTH = 1520;
+	final int WINDOW_HEIGHT = 860;
 
-    final static CFont FONT_R = new CFont("../lib/fonts/Inter/static/Inter-Regular.ttf");
-    final static CFont FONT_M = new CFont("../lib/fonts/Inter/static/Inter-Medium.ttf");
+    final static CFont FONT_M = new CFont("../lib/fonts/Poppins/Poppins-Medium.ttf");
+    final static CFont FONT_SB = new CFont("../lib/fonts/Poppins/Poppins-SemiBold.ttf");
+    final static CFont FONT_B = new CFont("../lib/fonts/Poppins/Poppins-Bold.ttf");
 
-	final static Font FONT_R14 = FONT_R.resize(14f);
-	// final static Font FONT_R16 = FONT_R.resize(16f);
-	// final static Font FONT_R18 = FONT_R.resize(18f);
-
+	final static Font FONT_M10 = FONT_M.resize(10f);
 	final static Font FONT_M14 = FONT_M.resize(14f);
 	final static Font FONT_M16 = FONT_M.resize(16f);
 	final static Font FONT_M32 = FONT_M.resize(32f);
 
-    final ImageIcon logo_img = new ImageIcon("../lib/images/logo.png");
+    final static Font FONT_SB12 = FONT_SB.resize(12f);
+	final static Font FONT_SB16 = FONT_SB.resize(16f);
+	final static Font FONT_SB24 = FONT_SB.resize(24f);
+
+    final static Font FONT_B16 = FONT_B.resize(16f);
+
+    final ImageIcon IMG_LOGO = new ImageIcon("../lib/images/logo.png");
+    final ImageIcon IMG_COCACOLA = new ImageIcon("../lib/images/coca-cola.png");
     
+    final ImageIcon ICON_ADD = new ImageIcon("../lib/icons/plus.png");
+    final ImageIcon ICON_EDIT2 = new ImageIcon("../lib/icons/edit.png");
+    final ImageIcon ICON_DELETE = new ImageIcon("../lib/icons/delete.png");
+    final ImageIcon ICON_LINE = new ImageIcon("../lib/icons/line.png");
+    final ImageIcon ICON_CONFIG = new ImageIcon("../lib/icons/settings.png");
+    final ImageIcon ICON_LOGOUT = new ImageIcon("../lib/icons/logout.png");
+
     final ImageIcon plus_icon = new ImageIcon("../lib/icons/fa6-solid_plus.png");
     final ImageIcon edit_icon = new ImageIcon("../lib/icons/fa6-solid_pen-to-square.png");
     final ImageIcon remove_icon = new ImageIcon("../lib/icons/fa6-solid_trash-can.png");
     final ImageIcon chevron_icon = new ImageIcon("../lib/icons/chevron_right.png");
+    final ImageIcon back_icon = new ImageIcon("../lib/icons/back.png");
 
     final static String PROPERTY_1 = "property1";
 	final static String PROPERTY_2 = "property2";
@@ -77,6 +94,8 @@ public class App extends JFrame implements PropertyChangeListener{
     
     JButton btnGehitu, btnEditatu, btnEzabatu;
     AbstractAction accOpen, accGehitu, accEditatu, accEzabatu;
+
+    AbstractAction accAdd, accEdit, accDelete, accSettings, accLogout, accSearch;
 
     public App(){
 
@@ -119,24 +138,229 @@ public class App extends JFrame implements PropertyChangeListener{
         accEditatu = controller.newAction("Produktua Editatu", edit_icon, CMD_Editatu, KeyEvent.VK_E);
         accEzabatu = controller.newAction("Produktua Ezabatu", remove_icon, CMD_Ezabatu, KeyEvent.VK_R);
 
+        accAdd = controller.newAction("", ICON_ADD, CMD_Edariak, KeyEvent.VK_G);
+        accEdit = controller.newAction("", ICON_EDIT2, CMD_Edariak, KeyEvent.VK_G);
+        accDelete = controller.newAction("", ICON_DELETE, CMD_Edariak, KeyEvent.VK_G);
+        accSettings = controller.newAction("", ICON_CONFIG, CMD_Edariak, KeyEvent.VK_G);
+        accLogout = controller.newAction("", ICON_LOGOUT, CMD_Edariak, KeyEvent.VK_G);
+        accSearch = controller.newAction("Bilatu", null, CMD_Edariak, KeyEvent.VK_G);
+
 	}
 
     private Container createAppPane() {
 
-		JSplitPane main = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true);
-        main.setEnabled(false);
-        main.setDividerSize(0);
-        main.setBorder(null);
+		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true);
+        // pane.setResizeWeight(0.7);
+        pane.setDividerLocation(1120);
+        pane.setEnabled(false);
+        pane.setDividerSize(0);
+        pane.setBorder(null);
 
-        JPanel controlPanel = createControlPanel();
-        JPanel mapa = crearPanelMapa();
+        JPanel main = createMain();
+        JPanel sidebar = createSidebar();
         
-        main.add(mapa);
-        main.add(controlPanel);
+        pane.add(main);
+        pane.add(sidebar);
 
-		return main;
+		return pane;
 
 	}
+
+    private JPanel createMain() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JPanel mapa = crearPanelMapa();
+        JPanel header = createHeader();
+
+        panel.add(header, BorderLayout.NORTH);
+        panel.add(mapa, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private JPanel createSidebar() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+
+        JLabel label = new CLabel("Edariak", FONT_SB24, Palette.TEXT_CLR);
+        label.setBorder(BorderFactory.createEmptyBorder(24, 32, 24, 32));
+        label.setOpaque(true);
+        label.setBackground(Palette.DAWN_PINK);
+
+        JPanel listPanel = createListAndSearch();
+        
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(listPanel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private JPanel createListAndSearch() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+        // panel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
+
+        JPanel searchPanel = createSearchPanel();
+        JPanel listPanel = createListItem();
+        // listPanel.setOpaque(true);
+        // listPanel.setBackground(Palette.WHITE);
+
+        JLabel label = new JLabel("aaa");
+        label.setBorder(new LineBorder(Palette.DAWN_PINK, 1, false));
+
+        panel.add(searchPanel, BorderLayout.NORTH);
+        panel.add(listPanel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private JPanel createSearchPanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+
+        Border border = new LineBorder(Palette.DAWN_PINK, 1, false);
+		Border padding = new EmptyBorder(16, 16, 16, 16);
+
+        panel.setBorder(new CompoundBorder(border, padding));
+
+        JTextField search = new CTextField("Bilatu", FONT_SB16, 21);
+        JButton button = new JButton(accSearch);
+        button.setFont(FONT_M16);
+        button.setBorder(BorderFactory.createEmptyBorder(0, 36, 0, 36));
+        button.setFocusable(false);
+        button.setForeground(Palette.WHITE);
+        button.setBackground(Palette.BLUISH_PURPLE);
+
+
+        panel.add(search, BorderLayout.CENTER);
+        // panel.add(Box.createRigidArea(new Dimension(8, 0)));
+        panel.add(button, BorderLayout.EAST);
+
+        return panel;
+    }
+
+    private JPanel createListItem(){
+
+        JPanel panel = new JPanel();
+        BoxLayout panelLayout = new BoxLayout(panel, BoxLayout.X_AXIS);
+        panel.setLayout(panelLayout);
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+        // panel.setBackground(Color.decode("#F3EEFF"));
+
+        JLabel image = new JLabel(IMG_COCACOLA);
+
+        JPanel infoPanel = new JPanel();
+        BoxLayout infoPanelLayout = new BoxLayout(infoPanel, BoxLayout.Y_AXIS);
+        infoPanel.setLayout(infoPanelLayout);
+        infoPanel.setMaximumSize(new Dimension(300, 62));
+        infoPanel.setOpaque(false);
+        infoPanel.setBackground(Palette.WHITE);
+
+        JLabel itemName = new CLabel("Coca Cola", FONT_M14, Palette.TEXT_CLR);
+        itemName.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel itemDetails = new JPanel();
+        BoxLayout itemDetailsLayout = new BoxLayout(itemDetails, BoxLayout.X_AXIS);
+        itemDetails.setLayout(itemDetailsLayout);
+        itemDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
+        itemDetails.setOpaque(false);
+        itemDetails.setBackground(Palette.WHITE);
+
+
+        JPanel quantity = createDetail("Kopurua", "12 / 15");
+        JPanel createdby = createDetail("Sortzailea", "Jon Ramos");
+        JPanel data = createDetail("Data", "07/12/2023");
+
+        itemDetails.add(quantity);
+        itemDetails.add(Box.createRigidArea(new Dimension(32, 0)));
+        itemDetails.add(createdby);
+        itemDetails.add(Box.createRigidArea(new Dimension(32, 0)));
+        itemDetails.add(data);
+
+
+        infoPanel.add(itemName);
+        infoPanel.add(Box.createVerticalGlue());
+        infoPanel.add(itemDetails);
+
+
+        panel.add(image);
+        panel.add(infoPanel);
+
+        return panel;
+
+    }
+
+    private JPanel createDetail(String labelText, String valueText){
+
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setBackground(Palette.WHITE);
+
+        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(boxLayout);
+
+        JLabel label = new CLabel(labelText, FONT_M10, Palette.SILVER);
+        JLabel value = new CLabel(valueText, FONT_SB12, Palette.TEXT_CLR);
+
+        panel.add(label);
+        panel.add(value);
+
+        return panel;
+
+    }
+
+    private JPanel createHeader(){
+
+        JPanel panel = new JPanel();
+        BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
+        panel.setLayout(layout);
+        panel.setOpaque(true);
+        panel.setBackground(Palette.ALABASTER);
+        panel.setBorder(BorderFactory.createEmptyBorder(32, 64, 32, 64));
+
+        JLabel logo = new JLabel(IMG_LOGO);
+        JButton button = new JButton(accAdd);
+        button.setBackground(null);
+        button.setBorder(null);
+        button.setFocusable(false);
+
+        panel.add(logo);
+
+        panel.add(Box.createHorizontalGlue());
+
+        panel.add(new CButtonIcon(accAdd));
+
+        panel.add(Box.createRigidArea(new Dimension(32, 0)));
+
+        panel.add(new CButtonIcon(accEdit));
+
+        panel.add(Box.createRigidArea(new Dimension(32, 0)));
+
+        panel.add(new CButtonIcon(accDelete));
+
+        panel.add(Box.createRigidArea(new Dimension(32, 0)));
+
+        panel.add(new JLabel(ICON_LINE));
+
+        panel.add(Box.createRigidArea(new Dimension(32, 0)));
+
+        panel.add(new CButtonIcon(accSettings));
+
+        panel.add(Box.createRigidArea(new Dimension(32, 0)));
+
+        panel.add(new CButtonIcon(accLogout));
+
+        return panel;
+
+    }
 
     private JPanel crearPanelMapa() {
 
@@ -145,7 +369,7 @@ public class App extends JFrame implements PropertyChangeListener{
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         panel.setOpaque(true);
-        panel.setBackground(Palette.WHITE);
+        panel.setBackground(Palette.ALABASTER);
         // panel.setBorder(null);
         ImageIcon mapa = new ImageIcon("../lib/images/mapa/Almacen - Principal.png");
         
@@ -174,7 +398,7 @@ public class App extends JFrame implements PropertyChangeListener{
         panel.setBackground(Palette.CPANEL_BG);
         panel.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
 
-        JLabel logo = new JLabel(logo_img);
+        JLabel logo = new JLabel(IMG_LOGO);
         JScrollPane lista = crearPanelMenu();
         JPanel buttons = crearPanelButtons();
 
@@ -276,8 +500,8 @@ public class App extends JFrame implements PropertyChangeListener{
 
     private void foo(){
 
-        System.out.println(appPane.getSize());
-        System.out.println(btnGehitu.getIcon());
+        // System.out.println(appPane.getSize());
+        // System.out.println(btnGehitu.getIcon());
 
     }
 

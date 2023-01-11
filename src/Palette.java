@@ -2,9 +2,13 @@ import java.awt.Color;
 
 enum ColorPalette {
     WHITE("#FFFFFF"),
+    ALABASTER("#FBFBFB"),
     PORCELAIN("#F2F2F2"),
+    DAWN_PINK("#ECECEC"),
+    SILVER("#C3C6C7"),
     CYAN_BLUE("#0085FF"),
-    DARK_GREY("#555555"),
+    BLUISH_PURPLE("#814EFA"),
+    DARK_GREY("#222525"),
     
     ALUMINIUM("#95AAB5"),
     BLUISH_CYAN("#425059"),
@@ -25,11 +29,16 @@ enum ColorPalette {
 public class Palette{
 
 	public static final Color WHITE = ColorPalette.WHITE.getValue();
+	public static final Color ALABASTER = ColorPalette.ALABASTER.getValue();
 	public static final Color PORCELAIN = ColorPalette.PORCELAIN.getValue();
+	public static final Color DAWN_PINK = ColorPalette.DAWN_PINK.getValue();
+	public static final Color SILVER = ColorPalette.SILVER.getValue();
 	public static final Color CYAN_BLUE = ColorPalette.CYAN_BLUE.getValue();
+	public static final Color BLUISH_PURPLE = ColorPalette.BLUISH_PURPLE.getValue();
     public static final Color DARK_GREY = ColorPalette.DARK_GREY.getValue();
 
 
+    public static final Color MAIN_BG = ALABASTER;
     public static final Color CPANEL_BG = PORCELAIN;
     public static final Color TEXT_CLR = DARK_GREY;
     public static final Color BTN_PRIMARY_BG = CYAN_BLUE;
