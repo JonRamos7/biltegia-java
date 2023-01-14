@@ -8,7 +8,7 @@ public class CLabel extends JLabel {
 
         super(text);
 
-        // this.setOpaque(true);
+        this.setOpaque(false);
         this.setFont(font);
         this.setForeground(color);
 

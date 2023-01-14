@@ -2,6 +2,7 @@ import java.awt.Color;
 
 enum ColorPalette {
     WHITE("#FFFFFF"),
+    TITAN_WHITE("#F3EEFF"),
     ALABASTER("#FBFBFB"),
     PORCELAIN("#F2F2F2"),
     DAWN_PINK("#ECECEC"),
@@ -29,6 +30,7 @@ enum ColorPalette {
 public class Palette{
 
 	public static final Color WHITE = ColorPalette.WHITE.getValue();
+	public static final Color TITAN_WHITE = ColorPalette.TITAN_WHITE.getValue();
 	public static final Color ALABASTER = ColorPalette.ALABASTER.getValue();
 	public static final Color PORCELAIN = ColorPalette.PORCELAIN.getValue();
 	public static final Color DAWN_PINK = ColorPalette.DAWN_PINK.getValue();
@@ -45,5 +47,16 @@ public class Palette{
     public static final Color BTN_PRIMARY_FG = WHITE;
     public static final Color BTN_SECONDARY_BG = WHITE;
     public static final Color BTN_SECONDARY_FG = DARK_GREY;
+
+
+    public static final Color BTN_BG = ALABASTER;
+    public static final Color BTN_FG = TEXT_CLR;
+    public static final Color BTN_BG_SELECTED = BLUISH_PURPLE;
+    public static final Color BTN_FG_SELECTED = WHITE;
+    public static final Color BTN_BG_HOVER = BTN_BG_SELECTED;
+    public static final Color BTN_FG_HOVER = BTN_FG_SELECTED;
+
+    public static final Color LIST_ITEM_BG = WHITE;
+    public static final Color LIST_ITEM_ACTIVE = TITAN_WHITE;
 
 }

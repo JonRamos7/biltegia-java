@@ -16,13 +16,13 @@ public class Controller implements ActionListener, ListSelectionListener {
 
     App app;
     Model model;
-    JList<String> menu;
+    JList<ListItem> itemsList;
 
-    public Controller(App app, Model model, JList<String> menu){
+    public Controller(App app, Model model, JList<ListItem> itemsList){
 
         this.app = app;
         this.model = model;
-        this.menu = menu;
+        this.itemsList = itemsList;
 
     }
 
@@ -103,7 +103,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 
 		if ( e.getValueIsAdjusting()) return;
 		
-		String selected = menu.getSelectedValue();
+		ListItem selected = itemsList.getSelectedValue();
 
         System.out.println(selected);
 		

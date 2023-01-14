@@ -11,9 +11,15 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -57,8 +63,12 @@ public class App extends JFrame implements PropertyChangeListener{
 
     final static Font FONT_B16 = FONT_B.resize(16f);
 
-    final ImageIcon IMG_LOGO = new ImageIcon("../lib/images/logo.png");
-    final ImageIcon IMG_COCACOLA = new ImageIcon("../lib/images/coca-cola.png");
+    final static ImageIcon IMG_LOGO = new ImageIcon("../lib/images/logo.png");
+    final static ImageIcon IMG_MAPA = new ImageIcon("../lib/images/mapa/Almacen - Principal.png");
+    final static ImageIcon IMG_COCACOLA = new ImageIcon("../lib/images/coca-cola.png");
+    final static ImageIcon IMG_FONTVELLA = new ImageIcon("../lib/images/font-vella.png");
+    final static ImageIcon IMG_FANTA = new ImageIcon("../lib/images/fanta.png");
+    final static ImageIcon IMG_AQUARIUS = new ImageIcon("../lib/images/aquarius.png");
     
     final ImageIcon ICON_ADD = new ImageIcon("../lib/icons/plus.png");
     final ImageIcon ICON_EDIT2 = new ImageIcon("../lib/icons/edit.png");
@@ -66,12 +76,13 @@ public class App extends JFrame implements PropertyChangeListener{
     final ImageIcon ICON_LINE = new ImageIcon("../lib/icons/line.png");
     final ImageIcon ICON_CONFIG = new ImageIcon("../lib/icons/settings.png");
     final ImageIcon ICON_LOGOUT = new ImageIcon("../lib/icons/logout.png");
+    final ImageIcon ICON_COFFEE = new ImageIcon("../lib/icons/coffee.png");
 
-    final ImageIcon plus_icon = new ImageIcon("../lib/icons/fa6-solid_plus.png");
-    final ImageIcon edit_icon = new ImageIcon("../lib/icons/fa6-solid_pen-to-square.png");
-    final ImageIcon remove_icon = new ImageIcon("../lib/icons/fa6-solid_trash-can.png");
-    final ImageIcon chevron_icon = new ImageIcon("../lib/icons/chevron_right.png");
-    final ImageIcon back_icon = new ImageIcon("../lib/icons/back.png");
+    // final ImageIcon plus_icon = new ImageIcon("../lib/icons/fa6-solid_plus.png");
+    // final ImageIcon edit_icon = new ImageIcon("../lib/icons/fa6-solid_pen-to-square.png");
+    // final ImageIcon remove_icon = new ImageIcon("../lib/icons/fa6-solid_trash-can.png");
+    // final ImageIcon chevron_icon = new ImageIcon("../lib/icons/chevron_right.png");
+    // final ImageIcon back_icon = new ImageIcon("../lib/icons/back.png");
 
     final static String PROPERTY_1 = "property1";
 	final static String PROPERTY_2 = "property2";
@@ -80,36 +91,43 @@ public class App extends JFrame implements PropertyChangeListener{
     final static String CMD_Gehitu = "gehitu";
     final static String CMD_Editatu = "editatu";
     final static String CMD_Ezabatu = "ezabatu";
+
     final static String CMD_Edariak = "edariak";
-    final static String CMD_Patatak = "patatak";
     
     Container appPane;
 
     Model model;
     Controller controller;
 
-    JList<String> menu;
-    DefaultListModel<String> jlistMenuModel;
-    RendererMenuOption jlistMenuRenderer;
-    
-    JButton btnGehitu, btnEditatu, btnEzabatu;
-    AbstractAction accOpen, accGehitu, accEditatu, accEzabatu;
+    JList<ListItem> itemsList;
+    DefaultListModel<ListItem> itemsListModel;
+    RendererListItem listItemRenderer;
 
+    JList<JButton> navButtons;
+    DefaultListModel<JButton> navButtonsModel;
+    RendererNavButton navButtonRenderer;
+
+    JTextField searchInput;
+
+    AbstractAction accEdariak;
     AbstractAction accAdd, accEdit, accDelete, accSettings, accLogout, accSearch;
 
     public App(){
 
         super("BiltegIA");
 
-        jlistMenuRenderer = new RendererMenuOption();
-		jlistMenuModel = new DefaultListModel<String>();
-        initList();
+        this.itemsList = new JList<>();
+        this.listItemRenderer = new RendererListItem();
+        this.itemsListModel = initItemsList();
 
-        this.menu = new JList<>();
+        this.navButtons = new JList<>();
+        this.navButtonRenderer = new RendererNavButton();
+        
         this.model = new Model();
-        this.controller = new Controller(this, model, menu);
+        this.controller = new Controller(this, model, itemsList);
 
-        this.crearAcciones();
+        this.createActions();
+        this.initButtonsList();
 
         appPane = createAppPane();
 
@@ -121,22 +139,9 @@ public class App extends JFrame implements PropertyChangeListener{
 
     }
 
-    private void initList(){
-
-        jlistMenuModel.addElement("Edariak");
-        jlistMenuModel.addElement("Patatak");
-        jlistMenuModel.addElement("Fruta");
-        jlistMenuModel.addElement("Lorem");
-        jlistMenuModel.addElement("Ipsum");
-
-    }
-
-    private void crearAcciones() {
-
-		// accOpen = controller.newAction("Open", "Open", "../lib/icons/window_new.png", KeyEvent.VK_O);
-        accGehitu = controller.newAction("Produktua Gehitu", plus_icon, CMD_Gehitu, KeyEvent.VK_G);
-        accEditatu = controller.newAction("Produktua Editatu", edit_icon, CMD_Editatu, KeyEvent.VK_E);
-        accEzabatu = controller.newAction("Produktua Ezabatu", remove_icon, CMD_Ezabatu, KeyEvent.VK_R);
+    private void createActions(){
+        
+        accEdariak = controller.newAction("EDARIAK", ICON_COFFEE, CMD_Edariak, KeyEvent.VK_G);
 
         accAdd = controller.newAction("", ICON_ADD, CMD_Edariak, KeyEvent.VK_G);
         accEdit = controller.newAction("", ICON_EDIT2, CMD_Edariak, KeyEvent.VK_G);
@@ -146,6 +151,42 @@ public class App extends JFrame implements PropertyChangeListener{
         accSearch = controller.newAction("Bilatu", null, CMD_Edariak, KeyEvent.VK_G);
 
 	}
+
+    private DefaultListModel<ListItem> initItemsList(){
+
+        DefaultListModel<ListItem> list = new DefaultListModel<ListItem>();
+
+        list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", IMG_COCACOLA));
+        list.addElement(new ListItem("Fanta", 12, "Jon Ramos", "07/12/2023", IMG_FANTA));
+        list.addElement(new ListItem("Font Vella", 12, "Jon Ramos", "07/12/2023", IMG_FONTVELLA));
+        list.addElement(new ListItem("Aquarius", 12, "Jon Ramos", "07/12/2023", IMG_AQUARIUS));
+
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+        // list.addElement(new ListItem("Coca Cola", 12, "Jon Ramos", "07/12/2023", "../lib/images/coca-cola.png"));
+
+        return list;
+
+    }
+
+    private void initButtonsList(){
+
+        this.navButtonsModel = new DefaultListModel<JButton>();
+
+        this.navButtonsModel.addElement(new CButton(accEdariak, FONT_B16));
+        this.navButtonsModel.addElement(new CButton(accEdariak, FONT_B16));
+        this.navButtonsModel.addElement(new CButton(accEdariak, FONT_B16));
+        this.navButtonsModel.addElement(new CButton(accEdariak, FONT_B16));
+
+    }
 
     private Container createAppPane() {
 
@@ -169,152 +210,16 @@ public class App extends JFrame implements PropertyChangeListener{
     private JPanel createMain() {
 
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.ALABASTER);
 
-        JPanel mapa = crearPanelMapa();
         JPanel header = createHeader();
+        JPanel mapa = createPanelContent();
 
         panel.add(header, BorderLayout.NORTH);
         panel.add(mapa, BorderLayout.CENTER);
 
         return panel;
-    }
-
-    private JPanel createSidebar() {
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(true);
-        panel.setBackground(Palette.WHITE);
-
-        JLabel label = new CLabel("Edariak", FONT_SB24, Palette.TEXT_CLR);
-        label.setBorder(BorderFactory.createEmptyBorder(24, 32, 24, 32));
-        label.setOpaque(true);
-        label.setBackground(Palette.DAWN_PINK);
-
-        JPanel listPanel = createListAndSearch();
-        
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(listPanel, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    private JPanel createListAndSearch() {
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(true);
-        panel.setBackground(Palette.WHITE);
-        // panel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-
-        JPanel searchPanel = createSearchPanel();
-        JPanel listPanel = createListItem();
-        // listPanel.setOpaque(true);
-        // listPanel.setBackground(Palette.WHITE);
-
-        JLabel label = new JLabel("aaa");
-        label.setBorder(new LineBorder(Palette.DAWN_PINK, 1, false));
-
-        panel.add(searchPanel, BorderLayout.NORTH);
-        panel.add(listPanel, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    private JPanel createSearchPanel() {
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(true);
-        panel.setBackground(Palette.WHITE);
-
-        Border border = new LineBorder(Palette.DAWN_PINK, 1, false);
-		Border padding = new EmptyBorder(16, 16, 16, 16);
-
-        panel.setBorder(new CompoundBorder(border, padding));
-
-        JTextField search = new CTextField("Bilatu", FONT_SB16, 21);
-        JButton button = new JButton(accSearch);
-        button.setFont(FONT_M16);
-        button.setBorder(BorderFactory.createEmptyBorder(0, 36, 0, 36));
-        button.setFocusable(false);
-        button.setForeground(Palette.WHITE);
-        button.setBackground(Palette.BLUISH_PURPLE);
-
-
-        panel.add(search, BorderLayout.CENTER);
-        // panel.add(Box.createRigidArea(new Dimension(8, 0)));
-        panel.add(button, BorderLayout.EAST);
-
-        return panel;
-    }
-
-    private JPanel createListItem(){
-
-        JPanel panel = new JPanel();
-        BoxLayout panelLayout = new BoxLayout(panel, BoxLayout.X_AXIS);
-        panel.setLayout(panelLayout);
-        panel.setOpaque(true);
-        panel.setBackground(Palette.WHITE);
-        // panel.setBackground(Color.decode("#F3EEFF"));
-
-        JLabel image = new JLabel(IMG_COCACOLA);
-
-        JPanel infoPanel = new JPanel();
-        BoxLayout infoPanelLayout = new BoxLayout(infoPanel, BoxLayout.Y_AXIS);
-        infoPanel.setLayout(infoPanelLayout);
-        infoPanel.setMaximumSize(new Dimension(300, 62));
-        infoPanel.setOpaque(false);
-        infoPanel.setBackground(Palette.WHITE);
-
-        JLabel itemName = new CLabel("Coca Cola", FONT_M14, Palette.TEXT_CLR);
-        itemName.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JPanel itemDetails = new JPanel();
-        BoxLayout itemDetailsLayout = new BoxLayout(itemDetails, BoxLayout.X_AXIS);
-        itemDetails.setLayout(itemDetailsLayout);
-        itemDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
-        itemDetails.setOpaque(false);
-        itemDetails.setBackground(Palette.WHITE);
-
-
-        JPanel quantity = createDetail("Kopurua", "12 / 15");
-        JPanel createdby = createDetail("Sortzailea", "Jon Ramos");
-        JPanel data = createDetail("Data", "07/12/2023");
-
-        itemDetails.add(quantity);
-        itemDetails.add(Box.createRigidArea(new Dimension(32, 0)));
-        itemDetails.add(createdby);
-        itemDetails.add(Box.createRigidArea(new Dimension(32, 0)));
-        itemDetails.add(data);
-
-
-        infoPanel.add(itemName);
-        infoPanel.add(Box.createVerticalGlue());
-        infoPanel.add(itemDetails);
-
-
-        panel.add(image);
-        panel.add(infoPanel);
-
-        return panel;
-
-    }
-
-    private JPanel createDetail(String labelText, String valueText){
-
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setBackground(Palette.WHITE);
-
-        BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setLayout(boxLayout);
-
-        JLabel label = new CLabel(labelText, FONT_M10, Palette.SILVER);
-        JLabel value = new CLabel(valueText, FONT_SB12, Palette.TEXT_CLR);
-
-        panel.add(label);
-        panel.add(value);
-
-        return panel;
-
     }
 
     private JPanel createHeader(){
@@ -362,15 +267,73 @@ public class App extends JFrame implements PropertyChangeListener{
 
     }
 
+    private JPanel createPanelContent() {
+
+        int MAPA_WIDTH = 684, MAPA_HEIGHT = 584;
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        // panel.setBackground(Palette.ALABASTER);
+        
+        JLabel label = new JLabel(IMG_MAPA);
+        label.setPreferredSize(new Dimension(MAPA_WIDTH, MAPA_HEIGHT));
+
+        JPanel buttons = createButtonsList();
+
+        panel.add(buttons, BorderLayout.WEST);
+        panel.add(label, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private JPanel createButtonsList() {
+
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 64, 8, 64));
+
+        navButtons = new JList<>();
+        navButtons.setModel(navButtonsModel);
+        navButtons.setSelectedIndex(0);
+        navButtons.setCellRenderer(navButtonRenderer);
+        navButtons.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        navButtons.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = navButtons.locationToIndex(e.getPoint());
+                navButtonRenderer.setHoverIndex(index);
+                navButtons.repaint();
+            }
+        });
+
+        navButtons.addMouseListener(new MouseAdapter() {
+            public void mouseExited(MouseEvent e) {
+                navButtonRenderer.setHoverIndex(-1);
+                navButtons.repaint();
+            }
+        });
+
+        panel.add(Box.createVerticalGlue());
+        panel.add(navButtons);
+        panel.add(Box.createVerticalGlue());
+
+        return panel;
+
+    }
+
     private JPanel crearPanelMapa() {
 
         int MAPA_WIDTH = 684, MAPA_HEIGHT = 584;
 
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        panel.setOpaque(true);
-        panel.setBackground(Palette.ALABASTER);
+        panel.setOpaque(false);
+        // panel.setBackground(Palette.ALABASTER);
+        // panel.setBackground(Color.red);
         // panel.setBorder(null);
+
         ImageIcon mapa = new ImageIcon("../lib/images/mapa/Almacen - Principal.png");
         
         JLabel label = new JLabel(){
@@ -392,56 +355,87 @@ public class App extends JFrame implements PropertyChangeListener{
 
     }
 
-    private JPanel createControlPanel() {
+    private JPanel createSidebar() {
 
-        JPanel panel = new JPanel(new BorderLayout(0, 24));
-        panel.setBackground(Palette.CPANEL_BG);
-        panel.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
 
-        JLabel logo = new JLabel(IMG_LOGO);
-        JScrollPane lista = crearPanelMenu();
-        JPanel buttons = crearPanelButtons();
+        JLabel label = new CLabel("Edariak", FONT_SB24, Palette.TEXT_CLR);
+        label.setBorder(BorderFactory.createEmptyBorder(24, 32, 24, 32));
+        label.setOpaque(true);
+        label.setBackground(Palette.DAWN_PINK);
 
-
-        panel.add(logo, BorderLayout.NORTH);
-        panel.add(lista, BorderLayout.CENTER);
-        panel.add(buttons, BorderLayout.SOUTH);
+        JPanel listPanel = createListAndSearch();
+        
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(listPanel, BorderLayout.CENTER);
 
         return panel;
     }
 
-	private JScrollPane crearPanelMenu() {
+    private JPanel createListAndSearch() {
 
-		JScrollPane pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        pane.setBorder(null);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+        // panel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
 
-        menu.setBackground(Palette.CPANEL_BG);
-		menu.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		menu.setModel(jlistMenuModel);
-		menu.setCellRenderer(jlistMenuRenderer);
-        menu.addListSelectionListener(controller);
-		// zerrenda.addListSelectionListener(kontrolatzailea);
-		
-		pane.setViewportView(menu);
+        JPanel searchPanel = createSearchPanel();
+        JScrollPane listPanel = createItemsList();
+        // listPanel.setOpaque(true);
+        // listPanel.setBackground(Palette.WHITE);
 
+        JLabel label = new JLabel("aaa");
+        label.setBorder(new LineBorder(Palette.DAWN_PINK, 1, false));
 
-		return pane;
-
-	}
-
-    private JPanel crearPanelButtons() {
-
-        JPanel panel = new JPanel(new GridLayout(3, 1, 0, 8));
-
-        btnGehitu = crearButton(accGehitu, Palette.BTN_PRIMARY_BG, Palette.BTN_PRIMARY_FG);
-        btnEditatu = crearButton(accEditatu, Palette.BTN_SECONDARY_BG, Palette.BTN_SECONDARY_FG);
-        btnEzabatu = crearButton(accEzabatu, Palette.BTN_SECONDARY_BG, Palette.BTN_SECONDARY_FG);
-
-        panel.add(btnGehitu);
-        panel.add(btnEditatu);
-        panel.add(btnEzabatu);
+        panel.add(searchPanel, BorderLayout.NORTH);
+        panel.add(listPanel, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private JPanel createSearchPanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(true);
+        panel.setBackground(Palette.WHITE);
+
+        Border border = new LineBorder(Palette.DAWN_PINK, 1, false);
+		Border padding = new EmptyBorder(16, 16, 16, 16);
+
+        panel.setBorder(new CompoundBorder(border, padding));
+
+        searchInput = new CTextField("Bilatu", FONT_SB16, 21);
+
+        JButton button = new JButton(accSearch);
+        button.setFont(FONT_M16);
+        button.setBorder(BorderFactory.createEmptyBorder(0, 36, 0, 36));
+        button.setFocusable(false);
+        button.setForeground(Palette.WHITE);
+        button.setBackground(Palette.BLUISH_PURPLE);
+
+
+        panel.add(searchInput, BorderLayout.CENTER);
+        // panel.add(Box.createRigidArea(new Dimension(8, 0)));
+        panel.add(button, BorderLayout.EAST);
+
+        return panel;
+    }
+
+    private JScrollPane createItemsList(){
+
+        JScrollPane panel = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        itemsList = new JList<>();
+        itemsList.setModel(itemsListModel);
+        itemsList.setCellRenderer(listItemRenderer);
+        itemsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        panel.setViewportView(itemsList);
+
+		return panel;
+
     }
 
     private JButton crearButton(AbstractAction action, Color bg, Color fg){
@@ -458,17 +452,6 @@ public class App extends JFrame implements PropertyChangeListener{
         button.setIconTextGap(8);
 
         return button;
-
-    }
-
-    private JPanel crearButtonPanel(JButton button){
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, button.getPreferredSize().height));
-
-        panel.add(button, BorderLayout.NORTH);
-
-        return panel;
 
     }
 
@@ -502,6 +485,9 @@ public class App extends JFrame implements PropertyChangeListener{
 
         // System.out.println(appPane.getSize());
         // System.out.println(btnGehitu.getIcon());
+
+        System.out.println(navButtons.getSelectedValue().getPreferredSize());
+        // System.out.println(navButtons.getFixedCellHeight());
 
     }
 
