@@ -1,0 +1,13 @@
+0|edariak|Coca Cola|12|Jon Ramos|07/12/2023|coca-cola.png|2,5,8,11,14,13,12
+1|edariak|Fanta|12|Jon Ramos|07/12/2023|fanta.png|2,5,8,11,14,13,12
+2|edariak|Font Vella|12|Jon Ramos|07/12/2023|font-vella.png|2,5,8,11,14,13,12
+3|edariak|Aquarius|12|Jon Ramos|07/12/2023|aquarius.png|2,5,8,11,14,13,12
+4|patatak|Lays|12|Jon Ramos|07/12/2023|lays.png|2,5,8,11,14,13,12
+5|patatak|Pringles|12|Jon Ramos|07/12/2023|pringles.png|2,5,8,11,14,13,12
+6|patatak|Cheetos|12|Jon Ramos|07/12/2023|cheetos.png|2,5,8,11,14,13,12
+7|patatak|Palomitas|12|Jon Ramos|07/12/2023|palomitas.png|2,5,8,11,14,13,12
+8|patatak|Pipas|12|Jon Ramos|07/12/2023|pipas.png|2,5,8,11,14,13,12
+9|gozoak|Maxibon|12|Jon Ramos|07/12/2023|maxibon.png|2,5,8,11,14,13,12
+11|gozoak|Toblerone|12|Jon Ramos|07/12/2023|toblerone.png|2,5,8,11,14,13,12
+12|gozoak|KitKat|12|Jon Ramos|07/12/2023|kitkat.png|2,5,8,11,14,13,12
+13|gozoak|Filipinos|12|Jon Ramos|07/12/2023|filipinos.png|2,5,8,11,14,13,12

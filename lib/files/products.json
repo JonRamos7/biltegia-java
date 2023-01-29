@@ -1,0 +1,140 @@
+{
+  "patatak" : [ {
+    "uid" : "162250633023213",
+    "name" : "Lays",
+    "type" : "patatak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/lays.png"
+  }, {
+    "uid" : "162250633023217",
+    "name" : "Pringles",
+    "type" : "patatak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/pringles.png"
+  }, {
+    "uid" : "162250633023222",
+    "name" : "Cheetos",
+    "type" : "patatak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/cheetos.png"
+  }, {
+    "uid" : "162250633023225",
+    "name" : "Palomitas",
+    "type" : "patatak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/palomitas.png"
+  }, {
+    "uid" : "162250633023227",
+    "name" : "Pipas",
+    "type" : "patatak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/pipas.png"
+  } ],
+  "edariak" : [ {
+    "uid" : "162250633023230",
+    "name" : "Coca Cola",
+    "type" : "edariak",
+    "quantity" : 10,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/coca-cola.png"
+  }, {
+    "uid" : "162250633023236",
+    "name" : "Fanta",
+    "type" : "edariak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/fanta.png"
+  }, {
+    "uid" : "162250633023239",
+    "name" : "Font Vella",
+    "type" : "edariak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/font-vella.png"
+  }, {
+    "uid" : "162250633023240",
+    "name" : "Aquarius",
+    "type" : "edariak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/aquarius.png"
+  }, {
+    "uid" : "1674835274053489812551",
+    "name" : "Prueba",
+    "type" : "edariak",
+    "quantity" : 10,
+    "createdby" : "Jon Ramos",
+    "date" : "01/01/2023",
+    "path" : [ 1, 2, 3, 4, 5, 6 ],
+    "imagePath" : "../lib/images/products/default.png"
+  } ],
+  "gozoak" : [ {
+    "uid" : "162250633023242",
+    "name" : "Maxibon",
+    "type" : "gozoak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/maxibon.png"
+  }, {
+    "uid" : "162250633023245",
+    "name" : "Toblerone",
+    "type" : "gozoak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/toblerone.png"
+  }, {
+    "uid" : "162250633023249",
+    "name" : "KitKat",
+    "type" : "gozoak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/kitkat.png"
+  }, {
+    "uid" : "162250633023252",
+    "name" : "Filipinos",
+    "type" : "gozoak",
+    "quantity" : 12,
+    "createdby" : "Jon Ramos",
+    "date" : "07/12/2023",
+    "path" : [ 2, 5, 8, 11, 14, 13, 12 ],
+    "imagePath" : "../lib/images/products/filipinos.png"
+  }, {
+    "uid" : "1674920498037800521596",
+    "name" : "Prueba",
+    "type" : "gozoak",
+    "quantity" : 9,
+    "createdby" : "Jon Ramos",
+    "date" : "01/01/2023",
+    "path" : [ 4, 9, 10, 12, 14 ],
+    "imagePath" : "../lib/images/products/default.png"
+  } ]
+}

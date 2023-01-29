@@ -1,0 +1,4 @@
+0|drink|12|Coca Cola|Jon Ramos|07/12/2023|coca-cola.png|2,5,8,11,14,13,12
+1|drink|12|Fanta|Jon Ramos|07/12/2023|fanta.png|2,5,8,11,14,13,12
+2|drink|12|Font Vella|Jon Ramos|07/12/2023|font-vella.png|2,5,8,11,14,13,12
+3|drink|12|Aquarius|Jon Ramos|07/12/2023|aquarius.png|2,5,8,11,14,13,12

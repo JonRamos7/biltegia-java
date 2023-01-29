@@ -14,4 +14,10 @@ public class CLabel extends JLabel {
 
     }
 
+    public CLabel(){
+
+        this("", FontLibrary.FONT_R16, Palette.TEXT_CLR);
+
+    }
+
 }
